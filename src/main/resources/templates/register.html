@@ -1,0 +1,11 @@
+<form method="post" action="/register">
+
+    <input name="fullName" placeholder="Full name">
+    <input name="telephoneNumber" placeholder="Phone">
+    <input name="homeAddress" placeholder="Address">
+    <input name="passwordHash" placeholder="Password">
+
+    <button type="submit">Register</button>
+</form>
+
+<p th:if="${param.success}">User registered!</p>
