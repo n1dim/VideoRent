@@ -63,11 +63,7 @@
 # 2. Перечень и описание страниц
 ## Главная страница
 Отображается:
-<<<<<<< HEAD
 - список фильмов (Элемент списка: мини-постер фильма, название и год выхода)
-=======
-- список фильмов
->>>>>>> e74a06d (Entity classes, DAO classes and tests added)
 
 Действия:
 - переход к карточке фильма
@@ -97,11 +93,7 @@
 - ФИО
 - телефон
 - адрес
-<<<<<<< HEAD
 - история проката (Элемент списка: название фильма, дата выдачи, ожидаемый срок возврата, дата возврата, носитель. Если фильм в текущий момент находится у клиента, то рядом есть поле с запросом на продление: нужно ввести желаемую дату возврата)
-=======
-- история проката
->>>>>>> e74a06d (Entity classes, DAO classes and tests added)
 
 Действия:
 - изменение данных
@@ -132,11 +124,7 @@
 - количество пользователей
 - количество фильмов
 - количество выданных носителей
-<<<<<<< HEAD
 - список пользователей (Элемент списка: ФИО пользователя, заблокирован или нет)
-=======
-- список пользователей
->>>>>>> e74a06d (Entity classes, DAO classes and tests added)
 
 Действия:
 - перейти на страницу пользователя
@@ -146,11 +134,7 @@
 - ФИО
 - телефон
 - адрес
-<<<<<<< HEAD
 - история проката (Элемент списка: название фильма, дата выдачи, ожидаемый срок возврата, дата возврата, носитель. Если клиент запрашивает продление, то можно запрос одобрить или отклонить)
-=======
-- история проката
->>>>>>> e74a06d (Entity classes, DAO classes and tests added)
 
 Действия:
 - продлить аренду
@@ -169,53 +153,4 @@
         └── Страница пользователя  
 └── Личный кабинет
 ```
-<<<<<<< HEAD
 
-# 4. Создание базы данных
-```
-CREATE TABLE Users (
-    user_id SERIAL PRIMARY KEY,
-    telephone_number VARCHAR(15) UNIQUE NOT NULL,
-    full_name VARCHAR(100) NOT NULL,
-    home_address VARCHAR(200) NOT NULL,
-    password_hash VARCHAR(255) NOT NULL,
-    role VARCHAR(10) CHECK (role IN ('user', 'admin')) DEFAULT 'user',
-    is_blocked BOOLEAN DEFAULT FALSE
-);
-
-CREATE TABLE movies (
-    film_id SERIAL PRIMARY KEY,
-    title VARCHAR(200) NOT NULL,
-    film_director VARCHAR(100),
-    description TEXT,
-    company VARCHAR(100),
-    release_year INT NOT NULL
-);
-
-CREATE TABLE media (
-    media_id SERIAL PRIMARY KEY,
-    name VARCHAR(50) NOT NULL
-);
-
-CREATE TABLE copies (
-    copy_id SERIAL PRIMARY KEY,
-    film_id INT REFERENCES movies(film_id),
-    media_id INT REFERENCES media(media_id),
-    cost INT NOT NULL,
-    count INT NOT NULL,
-    status VARCHAR(20) CHECK (status IN ('available', 'unavailable'))
-);
-
-CREATE TABLE rentals (
-    id SERIAL PRIMARY KEY,
-    user_id INT REFERENCES users(user_id),
-    copy_id INT REFERENCES copies(copy_id),
-    issue_date DATE NOT NULL,
-    due_date DATE NOT NULL,
-    return_date DATE,
-    extension_requested BOOLEAN DEFAULT FALSE,
-    requested_date DATE
-);
-```
-=======
->>>>>>> e74a06d (Entity classes, DAO classes and tests added)
