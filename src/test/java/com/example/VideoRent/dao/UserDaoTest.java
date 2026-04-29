@@ -76,4 +76,23 @@ class UserDaoTest {
 
         assertNull(userDao.getById(id));
     }
+
+    @Test
+    void testFindByName() {
+
+        User user = new User();
+        user.setTelephoneNumber("555");
+        user.setFullName("Ivan Petrov");
+        user.setHomeAddress("addr");
+        user.setPasswordHash("hash");
+        user.setRole(Role.USER);
+        user.setIsBlocked(false);
+
+        userDao.save(user);
+
+        var result = userDao.findByName("Ivan");
+
+        assertFalse(result.isEmpty());
+        assertTrue(result.get(0).getFullName().contains("Ivan"));
+    }
 }

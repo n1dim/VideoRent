@@ -71,4 +71,84 @@ class MovieDaoTest {
 
         assertNull(movieDao.getById(id));
     }
+
+    @Test
+    void testFindByTitle() {
+
+        Movie movie = new Movie();
+        movie.setTitle("The Matrix");
+        movie.setFilmDirector("Wachowski");
+        movie.setDescription("sci-fi");
+        movie.setCompany("WB");
+        movie.setReleaseYear(1999);
+
+        movieDao.save(movie);
+
+        var result = movieDao.findByTitle("Matrix");
+
+        assertFalse(result.isEmpty());
+        assertTrue(result.get(0).getTitle().contains("Matrix"));
+    }
+
+    @Test
+    void testFindByYear() {
+
+        Movie movie = new Movie();
+        movie.setTitle("Interstellar");
+        movie.setFilmDirector("Nolan");
+        movie.setDescription("space");
+        movie.setCompany("WB");
+        movie.setReleaseYear(2014);
+
+        movieDao.save(movie);
+
+        var result = movieDao.findByYear(2014);
+
+        assertFalse(result.isEmpty());
+        assertEquals(2014, result.get(0).getReleaseYear());
+    }
+
+    @Test
+    void testFindByDirector() {
+
+        Movie movie = new Movie();
+        movie.setTitle("Matrix");
+        movie.setFilmDirector("Test");
+        movie.setDescription("desc");
+        movie.setCompany("WB");
+        movie.setReleaseYear(1999);
+
+        movieDao.save(movie);
+
+        var result = movieDao.findByDirector("Test");
+
+        assertFalse(result.isEmpty());
+        assertEquals("Test", result.get(0).getFilmDirector());
+    }
+
+    @Test
+    void testFindByCompany() {
+
+        Movie movie = new Movie();
+        movie.setTitle("Inception");
+        movie.setFilmDirector("Nolan");
+        movie.setDescription("desc");
+        movie.setCompany("Warner Bros");
+        movie.setReleaseYear(2010);
+
+        movieDao.save(movie);
+
+        var result = movieDao.findByCompany("Warner");
+
+        assertFalse(result.isEmpty());
+        assertTrue(result.get(0).getCompany().contains("Warner"));
+    }
+
+    @Test
+    void testFindByDirectorNotFound() {
+
+        var result = movieDao.findByDirector("Unknown");
+
+        assertTrue(result.isEmpty());
+    }
 }
