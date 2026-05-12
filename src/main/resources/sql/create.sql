@@ -14,7 +14,8 @@ CREATE TABLE movies (
     film_director VARCHAR(100) NOT NULL,
     description TEXT NOT NULL,
     company VARCHAR(100) NOT NULL,
-    release_year INT NOT NULL
+    release_year INT NOT NULL,
+    is_active BOOLEAN DEFAULT TRUE
 );
 
 CREATE TABLE media (
@@ -27,8 +28,7 @@ CREATE TABLE copies (
     film_id BIGINT REFERENCES movies(film_id),
     media_id BIGINT REFERENCES media(media_id),
     cost INT NOT NULL,
-    count INT NOT NULL,
-    status VARCHAR(20) CHECK (status IN ('AVAILABLE', 'UNAVAILABLE'))
+    count INT NOT NULL
 );
 
 CREATE TABLE rentals (

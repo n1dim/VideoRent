@@ -62,7 +62,6 @@ class RentalDaoTest {
         copy.setMedia(media);
         copy.setCost(10);
         copy.setCount(1);
-        copy.setStatus(Status.AVAILABLE);
         copyDao.save(copy);
 
         // 5. Rental
@@ -119,7 +118,6 @@ class RentalDaoTest {
         copy.setMedia(media);
         copy.setCost(20);
         copy.setCount(2);
-        copy.setStatus(Status.AVAILABLE);
         copyDao.save(copy);
 
         Rental rental = new Rental();
@@ -165,7 +163,6 @@ class RentalDaoTest {
         copy.setMedia(media);
         copy.setCost(30);
         copy.setCount(1);
-        copy.setStatus(Status.AVAILABLE);
         copyDao.save(copy);
 
         Rental rental = new Rental();

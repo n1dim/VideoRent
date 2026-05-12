@@ -17,4 +17,23 @@ public class UserDao extends CommonDaoImpl<User, Long> {
                 .setParameter("name", "%" + name + "%")
                 .getResultList();
     }
+
+    public User findByPhone(String number) {
+        return entityManager
+                .createQuery("SELECT u FROM User u WHERE u.telephoneNumber = :number", User.class)
+                .setParameter("number", number)
+                .getResultStream()
+                .findFirst()
+                .orElse(null);
+    }
+
+    public User findByPhoneAndPassword(String number, String passwd) {
+        return entityManager
+                .createQuery("SELECT u FROM User u WHERE u.telephoneNumber = :number AND u.passwordHash = :passwd", User.class)
+                .setParameter("number", number)
+                .setParameter("passwd", passwd)
+                .getResultStream()
+                .findFirst()
+                .orElse(null);
+    }
 }

@@ -31,8 +31,4 @@ public class Copy implements CommonEntity<Long> {
 
     @Column(nullable = false, name = "count")
     private Integer count;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status")
-    private Status status;
 }

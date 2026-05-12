@@ -33,4 +33,7 @@ public class Movie implements CommonEntity<Long> {
 
     @Column(nullable = false, name = "release_year")
     private Integer releaseYear;
+
+    @Column(name = "is_active")
+    private Boolean isActive = true;
 }

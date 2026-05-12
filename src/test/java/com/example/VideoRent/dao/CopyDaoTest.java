@@ -43,7 +43,6 @@ class CopyDaoTest {
         copy.setMedia(media);
         copy.setCost(100);
         copy.setCount(5);
-        copy.setStatus(Status.AVAILABLE);
 
         copyDao.save(copy);
 
@@ -53,7 +52,6 @@ class CopyDaoTest {
 
         assertEquals(100, fromDb.getCost());
         assertEquals(5, fromDb.getCount());
-        assertEquals(Status.AVAILABLE, fromDb.getStatus());
 
         assertEquals("Film", fromDb.getFilm().getTitle());
         assertEquals("DVD", fromDb.getMedia().getName());
@@ -78,7 +76,6 @@ class CopyDaoTest {
         copy.setMedia(media);
         copy.setCost(200);
         copy.setCount(2);
-        copy.setStatus(Status.UNAVAILABLE);
 
         copyDao.save(copy);
 
@@ -106,7 +103,6 @@ class CopyDaoTest {
         copy.setMedia(media);
         copy.setCost(50);
         copy.setCount(1);
-        copy.setStatus(Status.AVAILABLE);
 
         copyDao.save(copy);
 
