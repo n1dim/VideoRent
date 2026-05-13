@@ -136,11 +136,23 @@
             <a th:href="@{/register}" class="btn btn-outline-light btn-sm">Register</a>
             <a th:href="@{/login}" class="btn btn-danger btn-sm ms-2">Login</a>
         </div>
-        <div th:if="${session.currentUser != null}" class="d-flex align-items-center gap-3">
-            <span th:text="${session.currentUser.fullName}" class="text-light"></span>
-            <form method="post" th:action="@{/logout}" class="d-inline">
-                <button type="submit" class="btn btn-outline-light btn-sm">Logout</button>
-            </form>
+        <div th:if="${session.currentUser != null}" class="dropdown">
+            <button class="btn btn-outline-light btn-sm dropdown-toggle"
+                    type="button" data-bs-toggle="dropdown">
+                <span th:text="${session.currentUser.fullName}"></span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end"
+                style="background-color:#1a1a1a; border:1px solid #2a2a2a;">
+                <li>
+                    <a class="dropdown-item text-light" th:href="@{/profile}">My profile</a>
+                </li>
+                <li><hr class="dropdown-divider" style="border-color:#2a2a2a;"></li>
+                <li>
+                    <form method="post" th:action="@{/logout}">
+                        <button type="submit" class="dropdown-item text-danger">Logout</button>
+                    </form>
+                </li>
+            </ul>
         </div>
     </div>
 </nav>
@@ -183,12 +195,28 @@
                 <div class="description-box" th:text="${movie.description}"></div>
             </div>
 
+            <div th:if="${param.returnError != null}" class="alert alert-danger mt-3 py-2">
+                No active rental found for this phone number.
+            </div>
+
+            <div th:if="${param.issueError != null}" class="alert alert-danger mt-3 py-2">
+                <span th:if="${param.issueError[0] == 'USER_NOT_FOUND'}">User with this phone not found.</span>
+                <span th:if="${param.issueError[0] == 'NO_COPIES'}">No copies available.</span>
+                <span th:if="${param.issueError[0] == 'INVALID_DATE'}">Invalid date format.</span>
+            </div>
+
             <div class="mt-4">
                 <div class="d-flex justify-content-between align-items-center mb-2">
                     <p class="info-label mb-0">Available copies</p>
-                    <a th:if="${session.currentUser != null and session.currentUser.role.name() == 'ADMIN'}"
-                       th:href="@{/movie/{id}/copies/add(id=${movie.id})}"
-                       class="btn btn-danger btn-sm">+ Add Copy</a>
+                    <div th:if="${session.currentUser != null and session.currentUser.role.name() == 'ADMIN'}"
+                         class="d-flex gap-2">
+                        <button type="button" class="btn btn-success btn-sm"
+                                data-bs-toggle="modal" data-bs-target="#issueModal">Issue</button>
+                        <button type="button" class="btn btn-outline-warning btn-sm"
+                                data-bs-toggle="modal" data-bs-target="#returnModal">Return</button>
+                        <a th:href="@{/movie/{id}/copies/add(id=${movie.id})}"
+                           class="btn btn-danger btn-sm">+ Add Copy</a>
+                    </div>
                 </div>
                 <div class="copies-table" th:if="${!#lists.isEmpty(media)}">
                     <table class="table table-dark mb-0">
@@ -225,6 +253,74 @@
     </div>
 </div>
 
+<!-- Return modal -->
+<div class="modal fade" id="returnModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="background-color:#1a1a1a; border:1px solid #3a3a3a; color:#f0f0f0;">
+            <div class="modal-header" style="border-color:#2a2a2a;">
+                <h5 class="modal-title">Return movie</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="post" th:action="@{/movie/{id}/return(id=${movie.id})}">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label text-secondary" style="font-size:0.8rem;">CLIENT PHONE</label>
+                        <input id="returnPhone" name="phone" type="text" class="form-control"
+                               style="background:#2a2a2a; border-color:#3a3a3a; color:#f0f0f0;"
+                               placeholder="+7 (___) ___-__-__" maxlength="18" required>
+                    </div>
+                </div>
+                <div class="modal-footer" style="border-color:#2a2a2a;">
+                    <button type="button" class="btn btn-outline-light btn-sm" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-warning btn-sm">Return</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Issue modal -->
+<div class="modal fade" id="issueModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="background-color:#1a1a1a; border:1px solid #3a3a3a; color:#f0f0f0;">
+            <div class="modal-header" style="border-color:#2a2a2a;">
+                <h5 class="modal-title">Issue movie</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="post" th:action="@{/movie/{id}/issue(id=${movie.id})}">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label text-secondary" style="font-size:0.8rem;">CLIENT PHONE</label>
+                        <input id="issuePhone" name="phone" type="text" class="form-control"
+                               style="background:#2a2a2a; border-color:#3a3a3a; color:#f0f0f0;"
+                               placeholder="+7 (___) ___-__-__" maxlength="18" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label text-secondary" style="font-size:0.8rem;">COPY (MEDIA TYPE)</label>
+                        <select name="copyId" class="form-select"
+                                style="background:#2a2a2a; border-color:#3a3a3a; color:#f0f0f0;" required>
+                            <option value="" disabled selected>Select copy</option>
+                            <option th:each="copy : ${media}"
+                                    th:if="${copy.count > 0}"
+                                    th:value="${copy.id}"
+                                    th:text="${copy.media.name} + ' — ' + ${copy.cost} + ' ₽/day'"></option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label text-secondary" style="font-size:0.8rem;">DUE DATE</label>
+                        <input id="issueDueDate" name="dueDate" type="date" class="form-control"
+                               style="background:#2a2a2a; border-color:#3a3a3a; color:#f0f0f0;" required>
+                    </div>
+                </div>
+                <div class="modal-footer" style="border-color:#2a2a2a;">
+                    <button type="button" class="btn btn-outline-light btn-sm" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-success btn-sm">Issue</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <div class="modal fade" id="deleteModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" style="background-color:#1a1a1a; border:1px solid #3a3a3a; color:#f0f0f0;">
@@ -244,5 +340,29 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.getElementById('issueDueDate').min = new Date().toISOString().split('T')[0];
+
+    function applyPhoneMask(input) {
+        input.addEventListener('input', function () {
+            let digits = this.value.replace(/\D/g, '');
+            if (!digits.startsWith('7')) digits = '7' + digits;
+            digits = digits.slice(0, 11);
+            let result = '+7';
+            if (digits.length > 1) result += ' (' + digits.slice(1, 4);
+            if (digits.length > 4) result += ') ' + digits.slice(4, 7);
+            if (digits.length > 7) result += '-' + digits.slice(7, 9);
+            if (digits.length > 9) result += '-' + digits.slice(9, 11);
+            this.value = result;
+        });
+        input.closest('form').addEventListener('submit', function () {
+            input.value = '+' + input.value.replace(/\D/g, '');
+        });
+    }
+
+    applyPhoneMask(document.getElementById('returnPhone'));
+
+    applyPhoneMask(document.getElementById('issuePhone'));
+</script>
 </body>
 </html>

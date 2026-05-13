@@ -118,11 +118,25 @@
             <a th:href="@{/register}" class="btn btn-outline-light btn-sm">Register</a>
             <a th:href="@{/login}" class="btn btn-danger btn-sm ms-2">Login</a>
         </div>
-        <div th:if="${session.currentUser != null}" class="d-flex align-items-center gap-3">
-            <span th:text="${session.currentUser.fullName}" class="text-light"></span>
-            <form method="post" th:action="@{/logout}" class="d-inline">
-                <button type="submit" class="btn btn-outline-light btn-sm">Logout</button>
-            </form>
+        <a th:if="${session.currentUser != null and session.currentUser.role.name() == 'ADMIN'}"
+           th:href="@{/admin}" class="btn btn-outline-warning btn-sm">Admin panel</a>
+        <div th:if="${session.currentUser != null}" class="dropdown">
+            <button class="btn btn-outline-light btn-sm dropdown-toggle"
+                    type="button" data-bs-toggle="dropdown">
+                <span th:text="${session.currentUser.fullName}"></span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end"
+                style="background-color:#1a1a1a; border:1px solid #2a2a2a;">
+                <li>
+                    <a class="dropdown-item text-light" th:href="@{/profile}">My profile</a>
+                </li>
+                <li><hr class="dropdown-divider" style="border-color:#2a2a2a;"></li>
+                <li>
+                    <form method="post" th:action="@{/logout}">
+                        <button type="submit" class="dropdown-item text-danger">Logout</button>
+                    </form>
+                </li>
+            </ul>
         </div>
     </div>
 </nav>

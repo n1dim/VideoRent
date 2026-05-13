@@ -11,11 +11,13 @@ public class WebConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new AdminInterceptor())
                 .addPathPatterns(
+                        "/admin/**",
                         "/movies/add",
                         "/movies/delete/**",
                         "/movies/edit/**",
                         "/movie/*/copies/add",
                         "/movie/*/copies/edit/**",
+                        "/movie/*/issue",
                         "/media/add"
                 );
     }

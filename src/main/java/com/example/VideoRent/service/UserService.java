@@ -55,11 +55,55 @@ public class UserService {
         return s == null || s.isBlank();
     }
 
+    public User getUserById(Long id) {
+        return userDao.getById(id);
+    }
+
     public User login(String number, String passwd) {
         return userDao.findByPhoneAndPassword(number, hash(passwd));
     }
 
     public List<User> getAllUsers() {
         return userDao.getAll();
+    }
+
+    @Transactional
+    public void updateProfile(Long id, String fullName, String homeAddress) {
+        User user = userDao.getById(id);
+        if (user == null) return;
+        user.setFullName(fullName);
+        user.setHomeAddress(homeAddress);
+    }
+
+    @Transactional
+    public void blockUser(Long id, String reason) {
+        User user = userDao.getById(id);
+        if (user == null) return;
+        user.setIsBlocked(true);
+        user.setBlockReason(reason);
+    }
+
+    @Transactional
+    public void unblockUser(Long id) {
+        User user = userDao.getById(id);
+        if (user == null) return;
+        user.setIsBlocked(false);
+        user.setBlockReason(null);
+    }
+
+    @Transactional
+    public void setRole(Long id, com.example.VideoRent.entity.Role role) {
+        User user = userDao.getById(id);
+        if (user == null) return;
+        user.setRole(role);
+    }
+
+    @Transactional
+    public boolean changePassword(Long id, String oldPassword, String newPassword) {
+        User user = userDao.getById(id);
+        if (user == null) return false;
+        if (!user.getPasswordHash().equals(hash(oldPassword))) return false;
+        user.setPasswordHash(hash(newPassword));
+        return true;
     }
 }

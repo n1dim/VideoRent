@@ -5,7 +5,8 @@ CREATE TABLE users (
     home_address VARCHAR(200) NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
     role VARCHAR(10) CHECK (role IN ('USER', 'ADMIN')) DEFAULT 'USER',
-    is_blocked BOOLEAN DEFAULT FALSE
+    is_blocked BOOLEAN DEFAULT FALSE,
+    block_reason VARCHAR(500)
 );
 
 CREATE TABLE movies (

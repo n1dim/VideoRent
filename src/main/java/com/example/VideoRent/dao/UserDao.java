@@ -22,7 +22,8 @@ public class UserDao extends CommonDaoImpl<User, Long> {
         return entityManager
                 .createQuery("SELECT u FROM User u WHERE u.telephoneNumber = :number", User.class)
                 .setParameter("number", number)
-                .getResultStream()
+                .getResultList()
+                .stream()
                 .findFirst()
                 .orElse(null);
     }
@@ -32,7 +33,8 @@ public class UserDao extends CommonDaoImpl<User, Long> {
                 .createQuery("SELECT u FROM User u WHERE u.telephoneNumber = :number AND u.passwordHash = :passwd", User.class)
                 .setParameter("number", number)
                 .setParameter("passwd", passwd)
-                .getResultStream()
+                .getResultList()
+                .stream()
                 .findFirst()
                 .orElse(null);
     }

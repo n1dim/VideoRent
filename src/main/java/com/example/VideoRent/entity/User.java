@@ -37,4 +37,7 @@ public class User implements CommonEntity<Long> {
 
     @Column(nullable = false, name = "is_blocked")
     private Boolean isBlocked;
+
+    @Column(name = "block_reason")
+    private String blockReason;
 }
